@@ -1,7 +1,6 @@
 package reifnsk.minimap;
 
 import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.minecraft.src.*;
 

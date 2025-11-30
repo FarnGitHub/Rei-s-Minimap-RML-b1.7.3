@@ -467,7 +467,6 @@ public class ReiMinimap implements Runnable {
 			}
 
 			this.delayFlag = this.currentTimeMillis < this.delay;
-			//Environment.calcEnvironment();
 			int i53;
 			if(!this.chatWelcomed && System.currentTimeMillis() < this.chatTime + 10000L) {
 				Iterator iterator51 = this.chatLineList.iterator();
@@ -1850,6 +1849,17 @@ public class ReiMinimap implements Runnable {
 			this.drawCenteringRectangle(d11, d43, 1.0D, 8.0D, 8.0D);
 		}
 
+		try {
+			GL11.glColor3f(1.0F, 1.0F, 1.0F);
+			GL11.glPushMatrix();
+			GLTexture.MMARROW.bind();
+			GL11.glRotatef(this.notchDirection ? 0.0F : -90.0F, 0.0F, 0.0F, 1.0F);
+			this.drawCenteringRectangle(0.0D, 0.0D, 1.0D, 8.0D, 8.0D);
+		} catch (Exception exception53) {
+		} finally {
+			GL11.glPopMatrix();
+		}
+
 		GL11.glScaled(1.0D / (double)i1, 1.0D / (double)i1, 1.0D);
 		FontRenderer fontRenderer46 = this.theMinecraft.fontRenderer;
 		i16 = (int)(this.zoomVisible * 255.0F);
@@ -2176,6 +2186,15 @@ public class ReiMinimap implements Runnable {
 			}
 		}
 
+		GLTexture.N.bind();
+		this.drawCenteringRectangle(0.0D, -28.0D, 1.0D, 8.0D, 8.0D);
+		GLTexture.S.bind();
+		this.drawCenteringRectangle(0.0D, 28.0D, 1.0D, 8.0D, 8.0D);
+		GLTexture.W.bind();
+		this.drawCenteringRectangle(-28.0D, 0.0D, 1.0D, 8.0D, 8.0D);
+		GLTexture.E.bind();
+		this.drawCenteringRectangle(28.0D, 0.0D, 1.0D, 8.0D, 8.0D);
+
 		try {
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 			GL11.glPushMatrix();
@@ -2430,6 +2449,15 @@ public class ReiMinimap implements Runnable {
 			}
 		}
 
+		GLTexture.N.bind();
+		this.drawCenteringRectangle(0.0D, -104.0D, 1.0D, 16.0D, 16.0D);
+		GLTexture.S.bind();
+		this.drawCenteringRectangle(0.0D, 0.0D + 104.0D, 1.0D, 16.0D, 16.0D);
+		GLTexture.W.bind();
+		this.drawCenteringRectangle(0.0D - 104.0D, 0.0D, 1.0D, 16.0D, 16.0D);
+		GLTexture.E.bind();
+		this.drawCenteringRectangle(0.0D + 104.0D, 0.0D, 1.0D, 16.0D, 16.0D);
+
 		try {
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 			GL11.glPushMatrix();
@@ -2602,10 +2630,6 @@ public class ReiMinimap implements Runnable {
 			GL11.glTranslatef(0.0F, -16.0F, 0.0F);
 		}
 
-	}
-
-	private void texture(String string1) {
-		this.theMinecraft.renderEngine.bindTexture(this.theMinecraft.renderEngine.getTexture(string1));
 	}
 
 	public void setOption(EnumOption opt, EnumOptionValue val) {
@@ -3143,13 +3167,6 @@ public class ReiMinimap implements Runnable {
 	}
 
 	private int calculateSkylightSubtracted(long j1, float f3) {
-		/*float f4 = this.calculateCelestialAngle(j1) + f3;
-		float f5 = Math.max(0.0F, Math.min(1.0F, 1.0F - (MathHelper.cos(f4 * 3.141593F * 2.0F) * 2.0F + 0.5F)));
-		f5 = 1.0F - f5;
-		f5 = (float)((double)f5 * (1.0D - (double)(this.theWorld.getRainStrength(1.0F) * 5.0F) / 16.0D));
-		f5 = (float)((double)f5 * (1.0D - (double)(this.theWorld.getWeightedThunderStrength(1.0F) * 5.0F) / 16.0D));
-		f5 = 1.0F - f5;
-		//return (int)(f5 * 11.0F);*/
 		return this.theWorld.calculateSkylightSubtracted(f3);
 	}
 
@@ -3160,10 +3177,6 @@ public class ReiMinimap implements Runnable {
 			float f6 = f4 * 0.95F + 0.05F;
 			float f7 = this.theWorld.worldProvider.lightBrightnessTable[i5 / 16] * f6;
 			float f8 = this.theWorld.worldProvider.lightBrightnessTable[i5 % 16] * 1.55F;
-			//if(this.theWorld.lightningFlash > 0) {
-			//	f7 = this.theWorld.worldProvider.lightBrightnessTable[i5 / 16];
-			//}
-
 			float f9 = f7 * (f4 * 0.65F + 0.35F);
 			float f10 = f7 * (f4 * 0.65F + 0.35F);
 			float f13 = f8 * ((f8 * 0.6F + 0.4F) * 0.6F + 0.4F);
