@@ -31,34 +31,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 public class ReiMinimap implements Runnable {
-	public static final boolean DEBUG_BUILD = false;
-	public static final int MC_VERSION_INT = 33620224;
-	public static final String MC_110 = "1.1";
-	public static final String MC_100 = "1.0.0";
-	public static final String MC_B19P5 = "Beta 1.9pre5";
-	public static final String MC_B19P4 = "Beta 1.9pre4";
-	public static final String MC_B181 = "Beta 1.8.1";
-	public static final String MC_B180 = "Beta 1.8";
-	public static final String MC_B173 = "Beta 1.7.3";
-	public static final String MC_B166 = "Beta 1.6.6";
-	public static final String MC_B151 = "Beta 1.5_01";
-	public static final int MOD_VERSION_INT = 196609;
-	public static final String MOD_VERSION = "v3.0_01";
-	public static final String MC_VERSION = "1.1";
 	public static final String version = String.format("%s [%s]", new Object[]{"v3.0_01", "Beta 1.7.3"});
-	public static final boolean SUPPORT_HEIGHT_MOD = true;
-	public static final boolean SUPPORT_NEW_LIGHTING = true;
-	public static final boolean SUPPORT_SWAMPLAND_BIOME_COLOR = true;
-	public static final boolean CHANGE_SUNRISE_DIRECTION = true;
-	public boolean useModloader;
-	private static final double renderZ = 1.0D;
-	private static final boolean noiseAdded = false;
-	private static final float noiseAlpha = 0.1F;
 	static final File directory = new File(Minecraft.getMinecraftDir(), "mods" + File.separatorChar + "rei_minimap");
 	private float[] lightBrightnessTable = this.generateLightBrightnessTable(0.125F);
 	private static final int[] updateFrequencys = new int[]{2, 5, 10, 20, 40};
 	public static final ReiMinimap instance = new ReiMinimap();
-	private static final int TEXTURE_SIZE = 256;
 	private static BiomeGenBase[] bgbList;
 	Minecraft theMinecraft;
 	private Tessellator tessellator = Tessellator.instance;
@@ -188,9 +165,6 @@ public class ReiMinimap implements Runnable {
 	private boolean visibleEntitySquid;
 	private boolean visibleEntitySlime;
 	private boolean visibleEntityLiving;
-	private boolean autoUpdateCheck;
-	private int updateCheckFlag;
-	private URL updateCheckURL;
 	long ntime;
 	int count;
 	static float[] temp;
@@ -198,9 +172,6 @@ public class ReiMinimap implements Runnable {
 	private float[] lightmapGreen;
 	private float[] lightmapBlue;
 	private static final Map obfascatorFieldMap;
-	private static int[] $SWITCH_TABLE$reifnsk$minimap$TintType;
-	private static int[] $SWITCH_TABLE$reifnsk$minimap$EnumOptionValue;
-	private static int[] $SWITCH_TABLE$reifnsk$minimap$EnumOption;
 
 	static {
 		LinkedList linkedList0 = new LinkedList();
@@ -289,14 +260,6 @@ public class ReiMinimap implements Runnable {
 		this.configEntityLiving = true;
 		this.configEntityLightning = true;
 		this.configEntityDirection = true;
-		this.autoUpdateCheck = false;
-		this.updateCheckFlag = 0;
-
-		try {
-			this.updateCheckURL = new URL("http://dl.dropbox.com/u/34787499/minecraft/version.txt");
-		} catch (Exception exception1) {
-		}
-
 		this.ntime = 0L;
 		this.count = 0;
 		this.lightmapRed = new float[256];
@@ -1159,7 +1122,7 @@ public class ReiMinimap implements Runnable {
 									break;
 								}
 
-								int i9 = Environment.getEnvironment(chunk1, i7, i5, thread2).getSolidGrassColor();
+								int i9 = Environment.getEnvironment(chunk1, i7, i5, thread2).getBiomeColor();
 								byte b10 = (byte)(i9 >> 16);
 								byte b11 = (byte)(i9 >> 8);
 								byte b12 = (byte)(i9 >> 0);
@@ -1314,7 +1277,6 @@ public class ReiMinimap implements Runnable {
 
 			int i11;
 			if(this.lightType == 0) {
-				boolean z24 = true;
 				switch(this.lightmap) {
 				case 3:
 					i11 = 15;
@@ -1337,50 +1299,39 @@ public class ReiMinimap implements Runnable {
 				}
 
 				if(this.environmentColor) {
-					BiomeGenBase biomeGenBase19;
 					Environment environment31;
 					int i33;
-					switch($SWITCH_TABLE$reifnsk$minimap$TintType()[blockColor10.tintType.ordinal()]) {
-					case 2:
-						environment31 = Environment.getEnvironment(chunk1, i2, i4, thread7);
-						i33 = environment31.getGrassColor();
-						//pixelColor5.composite(blockColor10.alpha, Environment.calcGrassColor(biomeGenBase19, i33), f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
-						pixelColor5.composite(blockColor10.alpha, i33, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
-						return;
-					case 3:
-						long j32 = (long)(i2 * 3129871 + i4 * 6129781 + i3);
-						j32 = j32 * j32 * 42317861L + j32 * 11L;
-						int i34 = (int)((long)i2 + ((j32 >> 14 & 31L) - 16L));
-						int i20 = (int)((long)i4 + ((j32 >> 24 & 31L) - 16L));
-						int i21 = Environment.getEnvironment(chunk1, i34, i20, thread7).getGrassColor();
-						pixelColor5.composite(blockColor10.alpha, i21, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
-						return;
-					case 4:
-						environment31 = Environment.getEnvironment(chunk1, i2, i4, thread7);
-						i33 = environment31.getFoliageColor();
-						pixelColor5.composite(blockColor10.alpha, i33, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
-						return;
-					case 5:
-					case 6:
-					case 7:
-					case 8:
-					default:
-						break;
-					case 9:
-						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4, thread7).getBiome() == BiomeGenBase.swampland) {
-							pixelColor5.composite(blockColor10.alpha, blockColor10.red * 0.8784314F * f27, blockColor10.green * f29, blockColor10.blue * 0.4392157F * f30);
+					switch(blockColor10.tintType) {
+						case GRASS:
+							environment31 = Environment.getEnvironment(chunk1, i2, i4, thread7);
+							i33 = environment31.getGrassColor();
+							pixelColor5.composite(blockColor10.alpha, i33, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
 							return;
-						}
+						case TALL_GRASS:
+							long j32 = i2 * 3129871 + i4 * 6129781 + i3;
+							j32 = j32 * j32 * 42317861L + j32 * 11L;
+							int i34 = (int) ((long) i2 + ((j32 >> 14 & 31L) - 16L));
+							int i20 = (int) ((long) i4 + ((j32 >> 24 & 31L) - 16L));
+							int i21 = Environment.getEnvironment(chunk1, i34, i20, thread7).getGrassColor();
+							pixelColor5.composite(blockColor10.alpha, i21, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
+							return;
+						case FOLIAGE:
+							environment31 = Environment.getEnvironment(chunk1, i2, i4, thread7);
+							i33 = environment31.getFoliageColor();
+							pixelColor5.composite(blockColor10.alpha, i33, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
+							return;
+						default:
+							break;
 					}
 				} else {
-					switch($SWITCH_TABLE$reifnsk$minimap$TintType()[blockColor10.tintType.ordinal()]) {
-					case 2:
+					switch(blockColor10.tintType) {
+					case GRASS:
 						pixelColor5.composite(blockColor10.alpha, this.grassColor, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
 						return;
-					case 3:
+					case TALL_GRASS:
 						pixelColor5.composite(blockColor10.alpha, this.grassColor, f27 * blockColor10.red * 0.9F, f29 * blockColor10.green * 0.9F, f30 * blockColor10.blue * 0.9F);
 						return;
-					case 4:
+					case FOLIAGE:
 						pixelColor5.composite(blockColor10.alpha, this.foliageColor, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
 						return;
 					}
@@ -1427,13 +1378,13 @@ public class ReiMinimap implements Runnable {
 					Environment environment13;
 					int i14;
 					BiomeGenBase biomeGenBase15;
-					switch($SWITCH_TABLE$reifnsk$minimap$TintType()[blockColor10.tintType.ordinal()]) {
-					case 2:
+					switch(blockColor10.tintType) {
+					case GRASS:
 						environment13 = Environment.getEnvironment(chunk1, i2, i4, thread7);
 						i14 = environment13.getGrassColor();
 						pixelColor5.composite(blockColor10.alpha, i14, f12 * 0.6F);
 						return;
-					case 3:
+					case TALL_GRASS:
 						long j25 = (long)(i2 * 3129871 + i4 * 6129781 + i3);
 						j25 = j25 * j25 * 42317861L + j25 * 11L;
 						int i28 = (int)((long)i2 + ((j25 >> 14 & 31L) - 16L));
@@ -1441,45 +1392,27 @@ public class ReiMinimap implements Runnable {
 						int i17 = Environment.getEnvironment(chunk1, i28, i16, thread7).getGrassColor();
 						pixelColor5.composite(blockColor10.alpha, i17, f12 * 0.5F);
 						return;
-					case 4:
+					case FOLIAGE:
 						environment13 = Environment.getEnvironment(chunk1, i2, i4, thread7);
 						i14 = environment13.getFoliageColor();
 						pixelColor5.composite(blockColor10.alpha, i14, f12 * 0.5F);
 						return;
-					case 5:
-					case 6:
-					case 7:
-					case 8:
 					default:
 						break;
-					case 9:
-						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4, thread7).getBiome() == BiomeGenBase.swampland) {
-							pixelColor5.composite(blockColor10.alpha, blockColor10.red * 0.8784314F, blockColor10.green, blockColor10.blue * 0.4392157F, f12);
-							return;
-						}
 					}
 				} else {
-					switch($SWITCH_TABLE$reifnsk$minimap$TintType()[blockColor10.tintType.ordinal()]) {
-					case 2:
+					switch(blockColor10.tintType) {
+					case GRASS:
 						pixelColor5.composite(blockColor10.alpha, this.grassColor, f12 * blockColor10.red, f12 * blockColor10.green, f12 * blockColor10.blue);
 						return;
-					case 3:
+					case TALL_GRASS:
 						pixelColor5.composite(blockColor10.alpha, this.grassColor, f12 * blockColor10.red * 0.9F, f12 * blockColor10.green * 0.9F, f12 * blockColor10.blue * 0.9F);
 						return;
-					case 4:
+					case FOLIAGE:
 						pixelColor5.composite(blockColor10.alpha, this.foliageColor, f12 * blockColor10.red, f12 * blockColor10.green, f12 * blockColor10.blue);
 						return;
-					case 5:
-					case 6:
-					case 7:
-					case 8:
 					default:
 						break;
-					case 9:
-						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4, thread7).getBiome() == BiomeGenBase.swampland) {
-							pixelColor5.composite(blockColor10.alpha, blockColor10.red * 0.8784314F, blockColor10.green, blockColor10.blue * 0.4392157F, f12);
-							return;
-						}
 					}
 				}
 
@@ -1502,7 +1435,7 @@ public class ReiMinimap implements Runnable {
 
 		} else {
 			if(i3 > 0) {
-				this.surfaceCalc(chunk1, i2, i3 - 1, i4, pixelColor5, (TintType)null, thread7);
+				this.surfaceCalc(chunk1, i2, i3 - 1, i4, pixelColor5, null, thread7);
 			}
 
 		}
@@ -3512,370 +3445,6 @@ public class ReiMinimap implements Runnable {
 
 	boolean getMarkerDistance() {
 		return this.markerDistance;
-	}
-
-	static int[] $SWITCH_TABLE$reifnsk$minimap$TintType() {
-		int[] i10000 = $SWITCH_TABLE$reifnsk$minimap$TintType;
-		if($SWITCH_TABLE$reifnsk$minimap$TintType != null) {
-			return i10000;
-		} else {
-			int[] i0 = new int[TintType.values().length];
-
-			try {
-				i0[TintType.BIRCH.ordinal()] = 6;
-			} catch (NoSuchFieldError noSuchFieldError10) {
-			}
-
-			try {
-				i0[TintType.ETC.ordinal()] = 10;
-			} catch (NoSuchFieldError noSuchFieldError9) {
-			}
-
-			try {
-				i0[TintType.FOLIAGE.ordinal()] = 4;
-			} catch (NoSuchFieldError noSuchFieldError8) {
-			}
-
-			try {
-				i0[TintType.GLASS.ordinal()] = 8;
-			} catch (NoSuchFieldError noSuchFieldError7) {
-			}
-
-			try {
-				i0[TintType.GRASS.ordinal()] = 2;
-			} catch (NoSuchFieldError noSuchFieldError6) {
-			}
-
-			try {
-				i0[TintType.NONE.ordinal()] = 1;
-			} catch (NoSuchFieldError noSuchFieldError5) {
-			}
-
-			try {
-				i0[TintType.PINE.ordinal()] = 5;
-			} catch (NoSuchFieldError noSuchFieldError4) {
-			}
-
-			try {
-				i0[TintType.REDSTONE.ordinal()] = 7;
-			} catch (NoSuchFieldError noSuchFieldError3) {
-			}
-
-			try {
-				i0[TintType.TALL_GRASS.ordinal()] = 3;
-			} catch (NoSuchFieldError noSuchFieldError2) {
-			}
-
-			try {
-				i0[TintType.WATER.ordinal()] = 9;
-			} catch (NoSuchFieldError noSuchFieldError1) {
-			}
-
-			$SWITCH_TABLE$reifnsk$minimap$TintType = i0;
-			return i0;
-		}
-	}
-
-	static int[] $SWITCH_TABLE$reifnsk$minimap$EnumOptionValue() {
-		int[] i10000 = $SWITCH_TABLE$reifnsk$minimap$EnumOptionValue;
-		if($SWITCH_TABLE$reifnsk$minimap$EnumOptionValue != null) {
-			return i10000;
-		} else {
-			int[] i0 = new int[EnumOptionValue.values().length];
-
-			try {
-				i0[EnumOptionValue.AUTHOR.ordinal()] = 58;
-			} catch (NoSuchFieldError noSuchFieldError58) {
-			}
-
-			try {
-				i0[EnumOptionValue.AUTO.ordinal()] = 30;
-			} catch (NoSuchFieldError noSuchFieldError57) {
-			}
-
-			try {
-				i0[EnumOptionValue.BIOME.ordinal()] = 5;
-			} catch (NoSuchFieldError noSuchFieldError56) {
-			}
-
-			try {
-				i0[EnumOptionValue.CAVE.ordinal()] = 4;
-			} catch (NoSuchFieldError noSuchFieldError55) {
-			}
-
-			try {
-				i0[EnumOptionValue.DAY_TIME.ordinal()] = 11;
-			} catch (NoSuchFieldError noSuchFieldError54) {
-			}
-
-			try {
-				i0[EnumOptionValue.DEPTH.ordinal()] = 46;
-			} catch (NoSuchFieldError noSuchFieldError53) {
-			}
-
-			try {
-				i0[EnumOptionValue.DISABLE.ordinal()] = 2;
-			} catch (NoSuchFieldError noSuchFieldError52) {
-			}
-
-			try {
-				i0[EnumOptionValue.DYNAMIC.ordinal()] = 10;
-			} catch (NoSuchFieldError noSuchFieldError51) {
-			}
-
-			try {
-				i0[EnumOptionValue.EAST.ordinal()] = 48;
-			} catch (NoSuchFieldError noSuchFieldError50) {
-			}
-
-			try {
-				i0[EnumOptionValue.ENABLE.ordinal()] = 1;
-			} catch (NoSuchFieldError noSuchFieldError49) {
-			}
-
-			try {
-				i0[EnumOptionValue.GUI_SCALE.ordinal()] = 35;
-			} catch (NoSuchFieldError noSuchFieldError48) {
-			}
-
-			try {
-				i0[EnumOptionValue.HIGH.ordinal()] = 18;
-			} catch (NoSuchFieldError noSuchFieldError47) {
-			}
-
-			try {
-				i0[EnumOptionValue.HUMIDITY.ordinal()] = 7;
-			} catch (NoSuchFieldError noSuchFieldError46) {
-			}
-
-			try {
-				i0[EnumOptionValue.LARGE.ordinal()] = 33;
-			} catch (NoSuchFieldError noSuchFieldError45) {
-			}
-
-			try {
-				i0[EnumOptionValue.LARGER.ordinal()] = 34;
-			} catch (NoSuchFieldError noSuchFieldError44) {
-			}
-
-			try {
-				i0[EnumOptionValue.LOW.ordinal()] = 16;
-			} catch (NoSuchFieldError noSuchFieldError43) {
-			}
-
-			try {
-				i0[EnumOptionValue.LOWER_LEFT.ordinal()] = 22;
-			} catch (NoSuchFieldError noSuchFieldError42) {
-			}
-
-			try {
-				i0[EnumOptionValue.LOWER_RIGHT.ordinal()] = 24;
-			} catch (NoSuchFieldError noSuchFieldError41) {
-			}
-
-			try {
-				i0[EnumOptionValue.MIDDLE.ordinal()] = 17;
-			} catch (NoSuchFieldError noSuchFieldError40) {
-			}
-
-			try {
-				i0[EnumOptionValue.NEW_LIGHTING.ordinal()] = 13;
-			} catch (NoSuchFieldError noSuchFieldError39) {
-			}
-
-			try {
-				i0[EnumOptionValue.NIGHT_TIME.ordinal()] = 12;
-			} catch (NoSuchFieldError noSuchFieldError38) {
-			}
-
-			try {
-				i0[EnumOptionValue.NORMAL.ordinal()] = 32;
-			} catch (NoSuchFieldError noSuchFieldError37) {
-			}
-
-			try {
-				i0[EnumOptionValue.NORTH.ordinal()] = 49;
-			} catch (NoSuchFieldError noSuchFieldError36) {
-			}
-
-			try {
-				i0[EnumOptionValue.OLD_LIGHTING.ordinal()] = 14;
-			} catch (NoSuchFieldError noSuchFieldError35) {
-			}
-
-			try {
-				i0[EnumOptionValue.PERCENT100.ordinal()] = 45;
-			} catch (NoSuchFieldError noSuchFieldError34) {
-			}
-
-			try {
-				i0[EnumOptionValue.PERCENT25.ordinal()] = 42;
-			} catch (NoSuchFieldError noSuchFieldError33) {
-			}
-
-			try {
-				i0[EnumOptionValue.PERCENT50.ordinal()] = 43;
-			} catch (NoSuchFieldError noSuchFieldError32) {
-			}
-
-			try {
-				i0[EnumOptionValue.PERCENT75.ordinal()] = 44;
-			} catch (NoSuchFieldError noSuchFieldError31) {
-			}
-
-			try {
-				i0[EnumOptionValue.REI_MINIMAP.ordinal()] = 50;
-			} catch (NoSuchFieldError noSuchFieldError30) {
-			}
-
-			try {
-				i0[EnumOptionValue.ROUND.ordinal()] = 9;
-			} catch (NoSuchFieldError noSuchFieldError29) {
-			}
-
-			try {
-				i0[EnumOptionValue.SMALL.ordinal()] = 31;
-			} catch (NoSuchFieldError noSuchFieldError28) {
-			}
-
-			try {
-				i0[EnumOptionValue.SQUARE.ordinal()] = 8;
-			} catch (NoSuchFieldError noSuchFieldError27) {
-			}
-
-			try {
-				i0[EnumOptionValue.STENCIL.ordinal()] = 47;
-			} catch (NoSuchFieldError noSuchFieldError26) {
-			}
-
-			try {
-				i0[EnumOptionValue.SUB_OPTION.ordinal()] = 20;
-			} catch (NoSuchFieldError noSuchFieldError25) {
-			}
-
-			try {
-				i0[EnumOptionValue.SURFACE.ordinal()] = 3;
-			} catch (NoSuchFieldError noSuchFieldError24) {
-			}
-
-			try {
-				i0[EnumOptionValue.TEMPERATURE.ordinal()] = 6;
-			} catch (NoSuchFieldError noSuchFieldError23) {
-			}
-
-			try {
-				i0[EnumOptionValue.TYPE1.ordinal()] = 25;
-			} catch (NoSuchFieldError noSuchFieldError22) {
-			}
-
-			try {
-				i0[EnumOptionValue.TYPE2.ordinal()] = 26;
-			} catch (NoSuchFieldError noSuchFieldError21) {
-			}
-
-			try {
-				i0[EnumOptionValue.TYPE3.ordinal()] = 27;
-			} catch (NoSuchFieldError noSuchFieldError20) {
-			}
-
-			try {
-				i0[EnumOptionValue.TYPE4.ordinal()] = 28;
-			} catch (NoSuchFieldError noSuchFieldError19) {
-			}
-
-			try {
-				i0[EnumOptionValue.TYPE5.ordinal()] = 29;
-			} catch (NoSuchFieldError noSuchFieldError18) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPDATE_CHECK.ordinal()] = 52;
-			} catch (NoSuchFieldError noSuchFieldError17) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPDATE_CHECKING.ordinal()] = 53;
-			} catch (NoSuchFieldError noSuchFieldError16) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPDATE_FOUND1.ordinal()] = 54;
-			} catch (NoSuchFieldError noSuchFieldError15) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPDATE_FOUND2.ordinal()] = 55;
-			} catch (NoSuchFieldError noSuchFieldError14) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPDATE_NOT_FOUND.ordinal()] = 56;
-			} catch (NoSuchFieldError noSuchFieldError13) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPPER_LEFT.ordinal()] = 21;
-			} catch (NoSuchFieldError noSuchFieldError12) {
-			}
-
-			try {
-				i0[EnumOptionValue.UPPER_RIGHT.ordinal()] = 23;
-			} catch (NoSuchFieldError noSuchFieldError11) {
-			}
-
-			try {
-				i0[EnumOptionValue.VERSION.ordinal()] = 57;
-			} catch (NoSuchFieldError noSuchFieldError10) {
-			}
-
-			try {
-				i0[EnumOptionValue.VERY_HIGH.ordinal()] = 19;
-			} catch (NoSuchFieldError noSuchFieldError9) {
-			}
-
-			try {
-				i0[EnumOptionValue.VERY_LOW.ordinal()] = 15;
-			} catch (NoSuchFieldError noSuchFieldError8) {
-			}
-
-			try {
-				i0[EnumOptionValue.X0_5.ordinal()] = 36;
-			} catch (NoSuchFieldError noSuchFieldError7) {
-			}
-
-			try {
-				i0[EnumOptionValue.X1_0.ordinal()] = 37;
-			} catch (NoSuchFieldError noSuchFieldError6) {
-			}
-
-			try {
-				i0[EnumOptionValue.X1_5.ordinal()] = 38;
-			} catch (NoSuchFieldError noSuchFieldError5) {
-			}
-
-			try {
-				i0[EnumOptionValue.X2_0.ordinal()] = 39;
-			} catch (NoSuchFieldError noSuchFieldError4) {
-			}
-
-			try {
-				i0[EnumOptionValue.X4_0.ordinal()] = 40;
-			} catch (NoSuchFieldError noSuchFieldError3) {
-			}
-
-			try {
-				i0[EnumOptionValue.X8_0.ordinal()] = 41;
-			} catch (NoSuchFieldError noSuchFieldError2) {
-			}
-
-			try {
-				i0[EnumOptionValue.ZAN_MINIMAP.ordinal()] = 51;
-			} catch (NoSuchFieldError noSuchFieldError1) {
-			}
-
-			$SWITCH_TABLE$reifnsk$minimap$EnumOptionValue = i0;
-			return i0;
-		}
 	}
 
 	public SocketAddress getServerSocketAdress() {

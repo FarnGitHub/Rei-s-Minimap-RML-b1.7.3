@@ -1,14 +1,11 @@
 package reifnsk.minimap;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
 import net.minecraft.src.NBTTagCompound;
 
 public class WaypointEntity extends Entity {
 	private final Minecraft mc;
-	private ArrayList unloadedEntity;
 
 	public WaypointEntity(Minecraft minecraft1) {
 		super(minecraft1.theWorld);

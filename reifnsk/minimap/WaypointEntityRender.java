@@ -41,7 +41,6 @@ public class WaypointEntityRender extends Render {
 
 			if(!arrayList12.isEmpty()) {
 				Collections.sort(arrayList12);
-				//this.mc.entityRenderer.disableLightmap(0.0D);
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glDisable(GL11.GL_FOG);
 				iterator14 = arrayList12.iterator();
@@ -53,7 +52,6 @@ public class WaypointEntityRender extends Render {
 
 				GL11.glEnable(GL11.GL_FOG);
 				GL11.glEnable(GL11.GL_LIGHTING);
-				//this.mc.entityRenderer.enableLightmap(0.0D);
 				this.shadowSize = 0.0F;
 			}
 		}

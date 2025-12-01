@@ -9,10 +9,9 @@ import net.minecraft.src.World;
 import net.minecraft.src.WorldChunkManager;
 
 class Environment {
-    private static ConcurrentLinkedQueue queue = new ConcurrentLinkedQueue();
+    private static final ConcurrentLinkedQueue<Environment> queue = new ConcurrentLinkedQueue<>();
     private static final int foliageColorPine = ColorizerFoliage.getFoliageColorPine();
     private static final int foliageColorBirch = ColorizerFoliage.getFoliageColorBirch();
-    private static long randomSeed;
     private static Environment[] envCache = new Environment[262144];
     private static World world;
     private static WorldChunkManager worldChunkManager;
@@ -20,10 +19,10 @@ class Environment {
     private int z;
     private int grassColor;
     private int foliageColor;
-    private BiomeGenBase biome;
     private float temperature;
     private float humidity;
     private boolean valid;
+    private int biomeColor;
 
     static {
         for(int var0 = 0; var0 < envCache.length; ++var0) {
@@ -39,11 +38,11 @@ class Environment {
     private void set(int var1, int var2, float var3, float var4, BiomeGenBase var5) {
         this.x = var1;
         this.z = var2;
-        this.grassColor = ColorizerGrass.getGrassColor((double)var3, (double)var4);
-        this.foliageColor = ColorizerFoliage.getFoliageColor((double)var3, (double)var4);
+        this.grassColor = ColorizerGrass.getGrassColor(var3, var4);
+        this.foliageColor = ColorizerFoliage.getFoliageColor(var3, var4);
         this.temperature = var3;
         this.humidity = var4;
-        this.biome = var5;
+        this.biomeColor = var5.color;
     }
 
     public int getGrassColor() {
@@ -62,12 +61,8 @@ class Environment {
         return foliageColorBirch;
     }
 
-    public BiomeGenBase getBiome() {
-        return this.biome;
-    }
-
-    public int getSolidGrassColor() {
-        return biome.color;
+    public int getBiomeColor() {
+        return biomeColor;
     }
 
     public float getTemperature() {
@@ -78,18 +73,10 @@ class Environment {
         return this.humidity;
     }
 
-    public static int calcGrassColor(BiomeGenBase var0, int var1) {
-        return var0 == BiomeGenBase.swampland ? (var1 & 16711422) + 5115470 >> 1 : var1;
-    }
-
-    public static int calcFoliageColor(BiomeGenBase var0, int var1) {
-        return var0 == BiomeGenBase.swampland ? (var1 & 16711422) + 5115470 >> 1 : var1;
-    }
-
     static void calcEnvironment() {
         if(Thread.currentThread() == ReiMinimap.instance.mcThread) {
             while(true) {
-                Environment var0 = (Environment)queue.poll();
+                Environment var0 = queue.poll();
                 if(var0 == null) {
                     return;
                 }
@@ -125,14 +112,14 @@ class Environment {
 
     private static void calcEnvironment(int x, int z, Environment environment) {
         if(!environment.valid) {
-            world.getWorldChunkManager().func_4069_a(x, z, 1, 1);
-            double temperature = world.getWorldChunkManager().temperature[0];
-            double humidity = world.getWorldChunkManager().humidity[0];
+            worldChunkManager.func_4069_a(x, z, 1, 1);
+            float temperature = (float)worldChunkManager.temperature[0];
+            float humidity = (float)worldChunkManager.humidity[0];
             BiomeGenBase base = world.getWorldChunkManager().getBiomeGenAt(x, z);
             if(base == null) {
-                base = BiomeGenBase.getBiome((float)temperature, (float)humidity);
+                base = BiomeGenBase.getBiome(temperature, humidity);
             }
-            environment.set(x, z, (float)temperature, (float)humidity, base);
+            environment.set(x, z, temperature, humidity, base);
             environment.valid = true;
         }
     }

@@ -105,7 +105,7 @@ public class GLTexture {
 	}
 
 	private static BufferedImage readImage(String string0) {
-		InputStream inputStream1 = GLTexture.class.getResourceAsStream(string0);
+		InputStream inputStream1 = ReiMinimap.instance.theMinecraft.texturePackList.selectedTexturePack.getResourceAsStream(string0);
 		if(inputStream1 == null) {
 			return null;
 		} else {
