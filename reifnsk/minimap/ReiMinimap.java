@@ -468,6 +468,7 @@ public class ReiMinimap implements Runnable {
 
 			this.delayFlag = this.currentTimeMillis < this.delay;
 			int i53;
+            Environment.calcEnvironment();
 			if(!this.chatWelcomed && System.currentTimeMillis() < this.chatTime + 10000L) {
 				Iterator iterator51 = this.chatLineList.iterator();
 
@@ -1158,7 +1159,7 @@ public class ReiMinimap implements Runnable {
 									break;
 								}
 
-								int i9 = Environment.getEnvironment(chunk1, i7, i5).getSolidGrassColor();
+								int i9 = Environment.getEnvironment(chunk1, i7, i5, thread2).getSolidGrassColor();
 								byte b10 = (byte)(i9 >> 16);
 								byte b11 = (byte)(i9 >> 8);
 								byte b12 = (byte)(i9 >> 0);
@@ -1219,7 +1220,7 @@ public class ReiMinimap implements Runnable {
 									break;
 								}
 
-								double f9 = Environment.getEnvironment(chunk1, i7, i5).temperatureColor;
+								double f9 = Environment.getEnvironment(chunk1, i7, i5, thread2).getTemperature();
 								int i10 = (int)(f9 * 255.0D);
 								this.texture.setRGB(i8, i6, this.temperatureColor[i10]);
 							}
@@ -1278,7 +1279,7 @@ public class ReiMinimap implements Runnable {
 									break;
 								}
 
-								double f9 = Environment.getEnvironment(chunk1, i7, i5).humidityColor;
+								double f9 = Environment.getEnvironment(chunk1, i7, i5, thread2).getHumidity();
 								int i10 = (int)(f9 * 255.0D);
 								this.texture.setRGB(i8, i6, this.humidityColor[i10]);
 							}
@@ -1341,7 +1342,7 @@ public class ReiMinimap implements Runnable {
 					int i33;
 					switch($SWITCH_TABLE$reifnsk$minimap$TintType()[blockColor10.tintType.ordinal()]) {
 					case 2:
-						environment31 = Environment.getEnvironment(chunk1, i2, i4);
+						environment31 = Environment.getEnvironment(chunk1, i2, i4, thread7);
 						i33 = environment31.getGrassColor();
 						//pixelColor5.composite(blockColor10.alpha, Environment.calcGrassColor(biomeGenBase19, i33), f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
 						pixelColor5.composite(blockColor10.alpha, i33, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
@@ -1351,11 +1352,11 @@ public class ReiMinimap implements Runnable {
 						j32 = j32 * j32 * 42317861L + j32 * 11L;
 						int i34 = (int)((long)i2 + ((j32 >> 14 & 31L) - 16L));
 						int i20 = (int)((long)i4 + ((j32 >> 24 & 31L) - 16L));
-						int i21 = Environment.getEnvironment(chunk1, i34, i20).getGrassColor();
+						int i21 = Environment.getEnvironment(chunk1, i34, i20, thread7).getGrassColor();
 						pixelColor5.composite(blockColor10.alpha, i21, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
 						return;
 					case 4:
-						environment31 = Environment.getEnvironment(chunk1, i2, i4);
+						environment31 = Environment.getEnvironment(chunk1, i2, i4, thread7);
 						i33 = environment31.getFoliageColor();
 						pixelColor5.composite(blockColor10.alpha, i33, f27 * blockColor10.red, f29 * blockColor10.green, f30 * blockColor10.blue);
 						return;
@@ -1366,7 +1367,7 @@ public class ReiMinimap implements Runnable {
 					default:
 						break;
 					case 9:
-						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4).theBiome == BiomeGenBase.swampland) {
+						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4, thread7).getBiome() == BiomeGenBase.swampland) {
 							pixelColor5.composite(blockColor10.alpha, blockColor10.red * 0.8784314F * f27, blockColor10.green * f29, blockColor10.blue * 0.4392157F * f30);
 							return;
 						}
@@ -1428,7 +1429,7 @@ public class ReiMinimap implements Runnable {
 					BiomeGenBase biomeGenBase15;
 					switch($SWITCH_TABLE$reifnsk$minimap$TintType()[blockColor10.tintType.ordinal()]) {
 					case 2:
-						environment13 = Environment.getEnvironment(chunk1, i2, i4);
+						environment13 = Environment.getEnvironment(chunk1, i2, i4, thread7);
 						i14 = environment13.getGrassColor();
 						pixelColor5.composite(blockColor10.alpha, i14, f12 * 0.6F);
 						return;
@@ -1437,11 +1438,11 @@ public class ReiMinimap implements Runnable {
 						j25 = j25 * j25 * 42317861L + j25 * 11L;
 						int i28 = (int)((long)i2 + ((j25 >> 14 & 31L) - 16L));
 						int i16 = (int)((long)i4 + ((j25 >> 24 & 31L) - 16L));
-						int i17 = Environment.getEnvironment(chunk1, i28, i16).getGrassColor();
+						int i17 = Environment.getEnvironment(chunk1, i28, i16, thread7).getGrassColor();
 						pixelColor5.composite(blockColor10.alpha, i17, f12 * 0.5F);
 						return;
 					case 4:
-						environment13 = Environment.getEnvironment(chunk1, i2, i4);
+						environment13 = Environment.getEnvironment(chunk1, i2, i4, thread7);
 						i14 = environment13.getFoliageColor();
 						pixelColor5.composite(blockColor10.alpha, i14, f12 * 0.5F);
 						return;
@@ -1452,7 +1453,7 @@ public class ReiMinimap implements Runnable {
 					default:
 						break;
 					case 9:
-						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4).theBiome == BiomeGenBase.swampland) {
+						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4, thread7).getBiome() == BiomeGenBase.swampland) {
 							pixelColor5.composite(blockColor10.alpha, blockColor10.red * 0.8784314F, blockColor10.green, blockColor10.blue * 0.4392157F, f12);
 							return;
 						}
@@ -1475,7 +1476,7 @@ public class ReiMinimap implements Runnable {
 					default:
 						break;
 					case 9:
-						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4).theBiome == BiomeGenBase.swampland) {
+						if((i8 == 8 || i8 == 9) && Environment.getEnvironment(chunk1, i2, i4, thread7).getBiome() == BiomeGenBase.swampland) {
 							pixelColor5.composite(blockColor10.alpha, blockColor10.red * 0.8784314F, blockColor10.green, blockColor10.blue * 0.4392157F, f12);
 							return;
 						}
