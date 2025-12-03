@@ -26,4 +26,8 @@ public class WaypointEntity extends Entity {
 
 	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
 	}
+
+	public boolean isInRangeToRenderDist(double var1) {
+		return true;
+	}
 }
