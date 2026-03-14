@@ -44,7 +44,7 @@ public class GuiOptionScreen extends GuiScreen implements GuiScreenInterface {
 
 		for(int i2 = 0; i2 < i3; ++i2) {
 			EnumOption enumOption1 = enumOption4[i2];
-			if(enumOption1.getPage() == this.page && (!this.mc.theWorld.multiplayerWorld || enumOption1 != EnumOption.ENTITIES_RADAR_OPTION || ReiMinimap.instance.getAllowEntitiesRadar()) && enumOption1 != EnumOption.DIRECTION_TYPE) {
+			if(enumOption1.getPage() == this.page && (this.mc.theWorld != null && !this.mc.theWorld.multiplayerWorld || enumOption1 != EnumOption.ENTITIES_RADAR_OPTION || ReiMinimap.instance.getAllowEntitiesRadar()) && enumOption1 != EnumOption.DIRECTION_TYPE) {
 				GuiOptionButton guiOptionButton5 = new GuiOptionButton(this.mc.fontRenderer, enumOption1);
 				guiOptionButton5.setValue(ReiMinimap.instance.getOption(enumOption1));
 				this.controlList.add(guiOptionButton5);
@@ -78,6 +78,8 @@ public class GuiOptionScreen extends GuiScreen implements GuiScreenInterface {
 	}
 
 	public void drawScreen(int i1, int i2, float f3) {
+		if(this.mc.theWorld == null)
+			this.drawDefaultBackground();
 		String string4 = TITLE_STRING[this.page];
 		int i5 = this.fontRenderer.getStringWidth(string4);
 		int i6 = this.width - i5 >> 1;

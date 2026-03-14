@@ -79,6 +79,8 @@ public class GuiWaypointScreen extends GuiScreen implements GuiScreenInterface {
 	}
 
 	public void drawScreen(int i1, int i2, float f3) {
+		if(this.mc.theWorld == null)
+			this.drawDefaultBackground();
 		this.backButton.enabled = this.backButton.enabled2 = !this.removeMode;
 		this.addButton.enabled = this.addButton.enabled2 = !this.removeMode;
 		this.removeFlagButton.enabled = this.removeFlagButton.enabled2 = !this.removeMode;

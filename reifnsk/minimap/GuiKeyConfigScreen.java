@@ -81,6 +81,8 @@ public class GuiKeyConfigScreen extends GuiScreen implements GuiScreenInterface 
 	}
 
 	public void drawScreen(int i1, int i2, float f3) {
+		if(this.mc.theWorld == null)
+			this.drawDefaultBackground();
 		String string4 = "Key Config";
 		int i5 = this.fontRenderer.getStringWidth(string4);
 		int i6 = this.width - i5 >> 1;

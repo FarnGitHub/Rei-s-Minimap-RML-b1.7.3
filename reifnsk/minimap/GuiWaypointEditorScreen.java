@@ -110,6 +110,8 @@ public class GuiWaypointEditorScreen extends GuiScreen implements GuiScreenInter
 	}
 
 	public void drawScreen(int i1, int i2, float f3) {
+		if(this.mc.theWorld == null)
+			this.drawDefaultBackground();
 		int i4 = MathHelper.floor_double(this.mc.thePlayer.posX);
 		int i5 = MathHelper.floor_double(this.mc.thePlayer.posY);
 		int i6 = MathHelper.floor_double(this.mc.thePlayer.posZ);

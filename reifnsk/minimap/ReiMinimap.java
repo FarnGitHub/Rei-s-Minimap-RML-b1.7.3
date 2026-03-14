@@ -29,6 +29,7 @@ import net.minecraft.src.*;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import reifnsk.minimap.farn.TWLCompat;
 
 public class ReiMinimap implements Runnable {
 	public static final String version = String.format("%s [%s]", new Object[]{"v3.0_01", "Beta 1.7.3"});
@@ -37,7 +38,7 @@ public class ReiMinimap implements Runnable {
 	private static final int[] updateFrequencys = new int[]{2, 5, 10, 20, 40};
 	public static final ReiMinimap instance = new ReiMinimap();
 	private static BiomeGenBase[] bgbList;
-	Minecraft theMinecraft;
+	public Minecraft theMinecraft;
 	private Tessellator tessellator = Tessellator.instance;
 	private World theWorld;
 	private EntityPlayer thePlayer;
@@ -74,7 +75,7 @@ public class ReiMinimap implements Runnable {
 	private int skylightSubtracted;
 	private boolean isUpdateImage;
 	private boolean isCompleteImage;
-	private boolean enable = true;
+	public boolean enable = true;
 	private boolean showMenuKey = true;
 	private boolean filtering = true;
 	private int mapPosition = 2;
@@ -235,6 +236,12 @@ public class ReiMinimap implements Runnable {
 		}
 
 		obfascatorFieldMap = createObfuscatorFieldMap();
+		try {
+			if(Class.forName("GuiApiHelper") != null) {
+				TWLCompat.init();
+			}
+		} catch (ClassNotFoundException ignored) {
+		}
 	}
 
 	boolean getAllowCavemap() {
