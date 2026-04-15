@@ -139,7 +139,6 @@ public class ReiMinimap implements Runnable {
 	private HashMap dimensionName = new HashMap();
 	private HashMap dimensionScale = new HashMap();
 	private boolean chatWelcomed;
-	private List chatLineList;
 	private ChatLine chatLineLast;
 	private long chatTime;
 	private boolean configEntitiesRadar;
@@ -285,26 +284,6 @@ public class ReiMinimap implements Runnable {
 		this.mcThread = Thread.currentThread();
 		this.theMinecraft = ModLoader.getMinecraftInstance();
 		this.ingameGUI = this.theMinecraft.ingameGUI;
-		this.chatLineList = (List)getField(this.ingameGUI, "chatMessageList");
-		this.chatLineList = (List)(this.chatLineList == null ? new ArrayList() : this.chatLineList);
-
-		try {
-			Field[] field5;
-			int i4 = (field5 = RenderManager.class.getDeclaredFields()).length;
-
-			for(int i3 = 0; i3 < i4; ++i3) {
-				Field field2 = field5[i3];
-				if(field2.getType() == Map.class) {
-					WaypointEntityRender waypointEntityRender6 = new WaypointEntityRender(this.theMinecraft);
-					waypointEntityRender6.setRenderManager(RenderManager.instance);
-					field2.setAccessible(true);
-					((Map)field2.get(RenderManager.instance)).put(WaypointEntity.class, waypointEntityRender6);
-					break;
-				}
-			}
-		} catch (Exception exception33) {
-			exception33.printStackTrace();
-		}
 	}
 
 	public void onTickInGame(Minecraft minecraft1) {
@@ -436,92 +415,7 @@ public class ReiMinimap implements Runnable {
 			this.delayFlag = this.currentTimeMillis < this.delay;
 			int i53;
             Environment.calcEnvironment();
-			if(!this.chatWelcomed && System.currentTimeMillis() < this.chatTime + 10000L) {
-				Iterator iterator51 = this.chatLineList.iterator();
-
-				while(iterator51.hasNext()) {
-					ChatLine chatLine38 = (ChatLine)iterator51.next();
-					if(chatLine38 == null || this.chatLineLast == chatLine38) {
-						break;
-					}
-
-					Matcher matcher43 = Pattern.compile("\u00a70\u00a70((?:\u00a7[1-9a-d])+)\u00a7e\u00a7f").matcher(chatLine38.message);
-
-					while(matcher43.find()) {
-						this.chatWelcomed = true;
-						char[] c56;
-						i53 = (c56 = matcher43.group(1).toCharArray()).length;
-
-						for(i48 = 0; i48 < i53; ++i48) {
-							char c49 = c56[i48];
-							switch(c49) {
-							case '1':
-								this.allowCavemap = true;
-								break;
-							case '2':
-								this.allowEntityPlayer = true;
-								break;
-							case '3':
-								this.allowEntityAnimal = true;
-								break;
-							case '4':
-								this.allowEntityMob = true;
-								break;
-							case '5':
-								this.allowEntitySlime = true;
-								break;
-							case '6':
-								this.allowEntitySquid = true;
-								break;
-							case '7':
-								this.allowEntityLiving = true;
-							}
-						}
-					}
-				}
-
-				this.chatLineLast = this.chatLineList.isEmpty() ? null : (ChatLine)this.chatLineList.get(0);
-				if(this.chatWelcomed) {
-					this.allowEntitiesRadar = this.allowEntityPlayer || this.allowEntityAnimal || this.allowEntityMob || this.allowEntitySlime || this.allowEntitySquid || this.allowEntityLiving;
-					if(this.allowCavemap) {
-						this.chatInfo("\u00a7E[Rei\'s Minimap] enabled: cavemapping.");
-					}
-
-					if(this.allowEntitiesRadar) {
-						StringBuilder stringBuilder39 = new StringBuilder("\u00a7E[Rei\'s Minimap] enabled: entities radar (");
-						if(this.allowEntityPlayer) {
-							stringBuilder39.append("Player, ");
-						}
-
-						if(this.allowEntityAnimal) {
-							stringBuilder39.append("Animal, ");
-						}
-
-						if(this.allowEntityMob) {
-							stringBuilder39.append("Mob, ");
-						}
-
-						if(this.allowEntitySlime) {
-							stringBuilder39.append("Slime, ");
-						}
-
-						if(this.allowEntitySquid) {
-							stringBuilder39.append("Squid, ");
-						}
-
-						if(this.allowEntityLiving) {
-							stringBuilder39.append("Living, ");
-						}
-
-						stringBuilder39.setLength(stringBuilder39.length() - 2);
-						stringBuilder39.append(")");
-						this.chatInfo(stringBuilder39.toString());
-					}
-				}
-			} else {
-				this.chatWelcomed = true;
-			}
-
+			this.chatWelcomed = true;
 			this.visibleEntitiesRadar = this.allowEntitiesRadar && this.configEntitiesRadar;
 			this.visibleEntityPlayer = this.allowEntityPlayer && this.configEntityPlayer;
 			this.visibleEntityAnimal = this.allowEntityAnimal && this.configEntityAnimal;
