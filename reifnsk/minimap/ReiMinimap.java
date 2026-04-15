@@ -283,6 +283,28 @@ public class ReiMinimap implements Runnable {
 
 		this.loadOptions();
 		this.mcThread = Thread.currentThread();
+		this.theMinecraft = ModLoader.getMinecraftInstance();
+		this.ingameGUI = this.theMinecraft.ingameGUI;
+		this.chatLineList = (List)getField(this.ingameGUI, "chatMessageList");
+		this.chatLineList = (List)(this.chatLineList == null ? new ArrayList() : this.chatLineList);
+
+		try {
+			Field[] field5;
+			int i4 = (field5 = RenderManager.class.getDeclaredFields()).length;
+
+			for(int i3 = 0; i3 < i4; ++i3) {
+				Field field2 = field5[i3];
+				if(field2.getType() == Map.class) {
+					WaypointEntityRender waypointEntityRender6 = new WaypointEntityRender(this.theMinecraft);
+					waypointEntityRender6.setRenderManager(RenderManager.instance);
+					field2.setAccessible(true);
+					((Map)field2.get(RenderManager.instance)).put(WaypointEntity.class, waypointEntityRender6);
+					break;
+				}
+			}
+		} catch (Exception exception33) {
+			exception33.printStackTrace();
+		}
 	}
 
 	public void onTickInGame(Minecraft minecraft1) {
@@ -303,31 +325,6 @@ public class ReiMinimap implements Runnable {
 			}
 
 			int i3;
-			if(this.theMinecraft == null) {
-				this.theMinecraft = minecraft1;
-				this.ingameGUI = this.theMinecraft.ingameGUI;
-				this.chatLineList = (List)getField(this.ingameGUI, "chatMessageList");
-				this.chatLineList = (List)(this.chatLineList == null ? new ArrayList() : this.chatLineList);
-
-				try {
-					Field[] field5;
-					int i4 = (field5 = RenderManager.class.getDeclaredFields()).length;
-
-					for(i3 = 0; i3 < i4; ++i3) {
-						Field field2 = field5[i3];
-						if(field2.getType() == Map.class) {
-							WaypointEntityRender waypointEntityRender6 = new WaypointEntityRender(minecraft1);
-							waypointEntityRender6.setRenderManager(RenderManager.instance);
-							field2.setAccessible(true);
-							((Map)field2.get(RenderManager.instance)).put(WaypointEntity.class, waypointEntityRender6);
-							break;
-						}
-					}
-				} catch (Exception exception33) {
-					exception33.printStackTrace();
-				}
-			}
-
 			if(this.texturePack != minecraft1.texturePackList.selectedTexturePack) {
 				this.texturePack = minecraft1.texturePackList.selectedTexturePack;
 				BlockColor.textureColorUpdate();
@@ -3470,7 +3467,7 @@ public class ReiMinimap implements Runnable {
 	public static <T> T getPrivateField(Object obj, String fieldName) {
 		try {
 			Class<?> clazz = obj.getClass();
-			java.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
+			Field field = clazz.getDeclaredField(fieldName);
 			field.setAccessible(true);
 			return (T) field.get(obj);
 		} catch (Exception e) {
