@@ -283,7 +283,6 @@ public class ReiMinimap implements Runnable {
 		this.loadOptions();
 		this.mcThread = Thread.currentThread();
 		this.theMinecraft = ModLoader.getMinecraftInstance();
-		this.ingameGUI = this.theMinecraft.ingameGUI;
 	}
 
 	public void onTickInGame(Minecraft minecraft1) {
@@ -2985,7 +2984,7 @@ public class ReiMinimap implements Runnable {
 	}
 
 	private void chatInfo(String string1) {
-		this.ingameGUI.addChatMessage(string1);
+		this.theMinecraft.ingameGUI.addChatMessage(string1);
 	}
 
 	private float[] generateLightBrightnessTable(float f1) {
