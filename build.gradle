@@ -1,0 +1,114 @@
+plugins {
+    id 'java'
+    id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT'
+}
+
+group = project.property('group')
+version = project.property('version')
+base {
+    archivesName = project.property('modid')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.wagyourtail.xyz/releases' }
+
+    ivy {
+        // We need this because the b1.7.3 forge dependency doesn't have metadata
+        url 'https://maven.wagyourtail.xyz/releases'
+
+        patternLayout {
+            artifact('[organisation]/[module]/[revision]/[module]-[revision]-[classifier].zip')
+            m2compatible = true
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+unimined {
+    useGlobalCache = false
+
+    minecraft {
+        version 'b1.7.3'
+        side 'client'
+
+        mappings {
+            retroMCP("b1.7")
+
+            stubs(['official', 'retroMCP']) {
+                def base = 'net/minecraft/src'
+                def mapClass = { name ->
+                    def path = "$base/$name"
+                    c(name, path, path)
+                }
+
+                fileTree(
+                        dir: project.file('src/main/java/net/minecraft/src'),
+                        include: '**/*.java'
+                ).each { file ->
+                    def relative = file.absolutePath
+                            .substring(
+                                    project.file('src/main/java/net/minecraft/src')
+                                            .absolutePath.length() + 1
+                            )
+                            .replace(File.separator, '/')
+
+                    relative = relative.substring(0, relative.length() - 5)
+
+                    mapClass(relative)
+                }
+
+                // Modloader
+                ['mod_ReiMinimap', 'BaseMod', 'EntityRendererProxy', 'MLProp', 'ModLoader', 'ModTextureAnimation', 'ModTextureStatic'].each(mapClass)
+
+                fileTree(dir: 'jarmods', include: ['*.jar', '*.zip']).each {
+                    jarClasses(it).each(mapClass)
+                }
+            }
+        }
+
+        jarMod {
+        }
+
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 8
+}
+
+dependencies {
+    jarMod 'risugami:modloader:b1.7.3'
+
+    // Any mods in the jarmods folder are automatically added as dependencies
+    jarMod fileTree(dir: 'jarmods', include: ['*.jar', '*.zip'])
+}
+
+import java.util.zip.ZipFile
+
+def jarClasses(File file) {
+    def zip = new ZipFile(file)
+    def names = []
+
+    try {
+        zip.entries().each { entry ->
+            if (entry.name.endsWith('.class') && !entry.name.contains('/')) {
+                def name = entry.name - '.class'
+                if (name.size() > 2) {
+                    names << name
+                }
+            }
+        }
+    } finally {
+        zip.close()
+    }
+
+    return names
+}
