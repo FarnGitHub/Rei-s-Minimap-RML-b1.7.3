@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+}
+
+group = property("group")
+version = property("version")
+
+base {
+    archivesName = property("baseName")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    // Releases
+    maven {
+        name = 'johnymuffin-nexus-releases'
+        url = uri('https://repository.johnymuffin.com/repository/maven-public/')
+        mavenContent {
+            releasesOnly()
+        }
+    }
+
+    // Snapshots
+    maven {
+        name = 'johnymuffin-nexus-snapshots'
+        url = uri('https://repository.johnymuffin.com/repository/maven-snapshots/')
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
+
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+
+    maven {
+        url = "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compileOnly('org.retromc:beta-evolutions-v2:2.0.8') {
+        exclude group: 'paulscode', module: 'sound'
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
