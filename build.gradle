@@ -40,11 +40,6 @@ repositories {
     }
 
     maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-
-    maven {
         url = "https://jitpack.io"
     }
 }
