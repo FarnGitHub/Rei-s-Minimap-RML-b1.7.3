@@ -854,7 +854,11 @@ public class ReiMinimap implements Runnable {
 
 				for(int chY = 0; chY < 16; ++chY) {
 					int y = cZ + chY;
-					if(y >= 0 && y < 256) {
+					if(y >= 0) {
+						if(y >= 256) {
+							break;
+						}
+
 						if(this.undulate) {
 							chunker3 = chY == 0 ? northChunk : mainChunk;
 							chunker4 = chY == 15 ? southChunk : mainChunk;
@@ -862,7 +866,10 @@ public class ReiMinimap implements Runnable {
 
 						for(int chX = 0; chX < 16; ++chX) {
 							int x = cX + chX;
-							if(x >= 0 && x < 256) {
+							if(x >= 0) {
+								if(x >= 256) {
+									break;
+								}
 
 								color.clear();
 								int i19 = !this.omitHeightCalc && !this.heightmap && !this.undulate ? this.worldHeight : Math.min(this.worldHeight, mainChunk.getHeightValue(chX, chY));
@@ -961,7 +968,7 @@ public class ReiMinimap implements Runnable {
 				for(int chX = 0; chX < 16; ++chX) {
 					int x = chX + cZ;
 					if(x >= 0) {
-						if(x > 256) {
+						if(x >= 256) {
 							break;
 						}
 
