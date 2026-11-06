@@ -11,7 +11,7 @@ import net.minecraft.src.Render;
 import net.minecraft.src.RenderManager;
 import net.minecraft.src.Tessellator;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjglx.opengl.GL11;
 
 public class WaypointEntityRender extends Render {
 	static final ReiMinimap rm = ReiMinimap.instance;
