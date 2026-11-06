@@ -3134,7 +3134,7 @@ public class ReiMinimap implements Runnable {
 		if(sendQueue != null) {
 			NetworkManager netManager = findField(NetClientHandler.class, sendQueue, NetworkManager.class);
 			if(netManager != null) {
-                return findField(NetworkManager.class, netManager, SocketAddress.class);
+                return netManager.getRemoteSocketAddress();
 			}
 		}
 		return null;
