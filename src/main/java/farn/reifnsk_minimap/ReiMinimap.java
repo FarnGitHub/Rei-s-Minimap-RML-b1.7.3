@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjglx.Sys;
+import org.lwjglx.input.Keyboard;
+import org.lwjglx.opengl.GL11;
 import org.retromc.beta_evo_settings.entries.BES_PlayerMovement;
 
 public class ReiMinimap implements Runnable {
