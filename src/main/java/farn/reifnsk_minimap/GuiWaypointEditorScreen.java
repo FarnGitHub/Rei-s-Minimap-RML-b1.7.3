@@ -8,7 +8,7 @@ import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.MathHelper;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjglx.input.Keyboard;
 
 public class GuiWaypointEditorScreen extends GuiScreen implements GuiScreenInterface {
 	private GuiWaypointScreen parrent;
