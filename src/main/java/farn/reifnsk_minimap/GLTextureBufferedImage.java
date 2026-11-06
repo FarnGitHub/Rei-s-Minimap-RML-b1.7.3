@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import net.minecraft.src.GLAllocation;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjglx.opengl.GL11;
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class GLTextureBufferedImage extends BufferedImage {
