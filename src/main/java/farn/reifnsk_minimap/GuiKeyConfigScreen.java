@@ -1,6 +1,5 @@
 package farn.reifnsk_minimap;
 
-import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 

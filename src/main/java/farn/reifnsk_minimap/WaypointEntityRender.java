@@ -2,7 +2,6 @@ package farn.reifnsk_minimap;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
@@ -38,7 +37,7 @@ public class WaypointEntityRender extends Render {
             }
 
 			if(!wPoints.isEmpty()) {
-				wPoints.sort(ViewWaypoint::compareTo);
+				Collections.sort(wPoints);
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glDisable(GL11.GL_FOG);
 

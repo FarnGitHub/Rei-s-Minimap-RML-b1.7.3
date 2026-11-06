@@ -1,7 +1,5 @@
 package farn.reifnsk_minimap;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.EntityPlayerSP;
 import net.minecraft.src.GuiButton;

@@ -2414,9 +2414,9 @@ public class ReiMinimap implements Runnable {
 				case TEXTURE:
 					this.textureView = opt.getValue(val);
 					if (textureView == 0) {
-						GLTexture.setPack("/farn/reifnsk_minimap/reitextures/");
+						GLTexture.setPack("/net/minecraft/src/reifnsk_minimap/reitextures/");
 					} else if (textureView == 1) {
-						GLTexture.setPack("/farn/reifnsk_minimap/zantextures/");
+						GLTexture.setPack("/net/minecraft/src/reifnsk_minimap/zantextures/");
 					}
 					break;
 
