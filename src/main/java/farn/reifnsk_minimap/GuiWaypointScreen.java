@@ -8,8 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import org.lwjglx.input.Keyboard;
+import org.lwjglx.input.Mouse;
 
 public class GuiWaypointScreen extends GuiScreen implements GuiScreenInterface {
 	static final int MIN_STRING_WIDTH = 64;
