@@ -2,14 +2,14 @@ package farn.reifnsk_minimap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
+import net.minecraft.src.ModLoader;
 import net.minecraft.src.NBTTagCompound;
 
 public class WaypointEntity extends Entity {
-	private final Minecraft mc;
+	private final Minecraft mc = ModLoader.getMinecraftInstance();
 
-	public WaypointEntity(Minecraft minecraft1) {
-		super(minecraft1.theWorld);
-		this.mc = minecraft1;
+	public WaypointEntity() {
+		super(ModLoader.getMinecraftInstance().theWorld);
 		this.ignoreFrustumCheck = true;
 		this.onUpdate();
 	}
@@ -21,10 +21,10 @@ public class WaypointEntity extends Entity {
 	protected void entityInit() {
 	}
 
-	protected void readEntityFromNBT(NBTTagCompound nBTTagCompound1) {
+	protected void readEntityFromNBT(NBTTagCompound nbt) {
 	}
 
-	protected void writeEntityToNBT(NBTTagCompound nBTTagCompound1) {
+	protected void writeEntityToNBT(NBTTagCompound nbt) {
 	}
 
 	public boolean isInRangeToRenderDist(double var1) {

@@ -63,25 +63,25 @@ public enum EnumOptionValue {
 	public final int color;
 	private final String text;
 
-	EnumOptionValue(int i3) {
-		this.color = i3;
+	EnumOptionValue(int color) {
+		this.color = color;
 		this.text = ReiMinimap.capitalize(this.name());
 	}
 
-	EnumOptionValue(int i3, String string4) {
-		this.color = i3;
-		this.text = string4;
+	EnumOptionValue(int color, String name) {
+		this.color = color;
+		this.text = name;
 	}
 
 	public String text() {
 		return this.text;
 	}
 
-	public static EnumOptionValue bool(boolean z0) {
-		return z0 ? ENABLE : DISABLE;
+	public static EnumOptionValue bool(boolean flag) {
+		return flag ? ENABLE : DISABLE;
 	}
 
-	public static boolean bool(EnumOptionValue enumOptionValue0) {
-		return enumOptionValue0 == ENABLE;
+	public static boolean bool(EnumOptionValue value) {
+		return value == ENABLE;
 	}
 }

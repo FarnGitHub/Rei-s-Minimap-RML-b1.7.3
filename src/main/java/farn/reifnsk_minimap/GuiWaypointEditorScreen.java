@@ -11,12 +11,12 @@ import org.lwjglx.input.Keyboard;
 public class GuiWaypointEditorScreen extends GuiScreen implements GuiScreenInterface {
 	private GuiWaypointScreen parrent;
 	private Waypoint waypoint;
-	private Waypoint waypointBackup;
-	private GuiTextField nameTextField;
-	private GuiTextField xCoordTextField;
-	private GuiTextField yCoordTextField;
-	private GuiTextField zCoordTextField;
-	private GuiScrollbar[] rgb;
+	private final Waypoint waypointBackup;
+	private final GuiTextField nameTextField;
+	private final GuiTextField xCoordTextField;
+	private final GuiTextField yCoordTextField;
+	private final GuiTextField zCoordTextField;
+	private final GuiScrollbar[] rgb;
 	private GuiSimpleButton okButton;
 	private GuiSimpleButton cancelButton;
 
@@ -107,7 +107,7 @@ public class GuiWaypointEditorScreen extends GuiScreen implements GuiScreenInter
 		super.onGuiClosed();
 	}
 
-	public void drawScreen(int i1, int i2, float f3) {
+	public void drawScreen(int mouseX, int mouseY, float tick) {
 		if(this.mc.theWorld == null)
 			this.drawDefaultBackground();
 		int x = MathHelper.floor_double(this.mc.thePlayer.posX);
@@ -146,7 +146,7 @@ public class GuiWaypointEditorScreen extends GuiScreen implements GuiScreenInter
 		this.drawCenteredString(this.fontRenderer, String.format("G:%03d", g), this.width / 2 - 15, this.height / 2 + 31, -2139062144);
 		this.drawCenteredString(this.fontRenderer, String.format("B:%03d", b), this.width / 2 - 15, this.height / 2 + 41, -2139062144);
 		this.drawRect(this.width + 90 >> 1, this.height / 2 + 20, this.width + 150 >> 1, this.height / 2 + 50, rgb);
-		super.drawScreen(i1, i2, f3);
+		super.drawScreen(mouseX, mouseY, tick);
 	}
 
 	protected void keyTyped(char character, int keyCode) {

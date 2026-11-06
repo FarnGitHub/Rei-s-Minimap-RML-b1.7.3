@@ -24,7 +24,7 @@ public enum KeyInput {
 
 	private static final File configFile = new File(ReiMinimap.directory, "keyconfig.txt");
 	private final int defaultKeyIndex;
-	private String label;
+	private final String label;
 	private int keyIndex;
 	private boolean keyDown;
 	private boolean oldKeyDown;

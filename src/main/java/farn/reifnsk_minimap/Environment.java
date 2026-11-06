@@ -23,24 +23,22 @@ class Environment {
     private int biomeColor;
 
     static {
-        for(int var0 = 0; var0 < envCache.length; ++var0) {
-            envCache[var0] = new Environment();
-        }
-
+        for(int i = 0; i < envCache.length; i++)
+            envCache[i] = new Environment();
     }
 
-    private boolean isLocation(int var1, int var2) {
-        return this.x == var1 && this.z == var2;
+    private boolean isLocation(int x, int z) {
+        return this.x == x && this.z == z;
     }
 
-    private void set(int var1, int var2, float var3, float var4, BiomeGenBase var5) {
-        this.x = var1;
-        this.z = var2;
-        this.grassColor = ColorizerGrass.getGrassColor(var3, var4);
-        this.foliageColor = ColorizerFoliage.getFoliageColor(var3, var4);
-        this.temperature = var3;
-        this.humidity = var4;
-        this.biomeColor = var5.color;
+    private void set(int x, int z, float temp, float humid, BiomeGenBase biome) {
+        this.x = x;
+        this.z = z;
+        this.grassColor = ColorizerGrass.getGrassColor(temp, humid);
+        this.foliageColor = ColorizerFoliage.getFoliageColor(temp, humid);
+        this.temperature = temp;
+        this.humidity = humid;
+        this.biomeColor = biome.color;
     }
 
     public int getGrassColor() {
@@ -66,42 +64,42 @@ class Environment {
     static void calcEnvironment() {
         if(Thread.currentThread() == ReiMinimap.instance.mcThread) {
             while(true) {
-                Environment var0 = queue.poll();
-                if(var0 == null) {
+                Environment env = queue.poll();
+                if(env == null) {
                     return;
                 }
 
-                calcEnvironment(var0);
+                calcEnvironment(env);
             }
         }
     }
 
-    public static Environment getEnvironment(int var0, int var1, Thread var2) {
-        int var3 = (var0 & 511) << 9 | var1 & 511;
-        Environment var4 = envCache[var3];
-        if(!var4.isLocation(var0, var1)) {
-            var4.valid = false;
+    public static Environment getEnvironment(int x, int z, Thread var2) {
+        int index = (x & 511) << 9 | z & 511;
+        Environment env = envCache[index];
+        if(!env.isLocation(x, z)) {
+            env.valid = false;
             if(var2 == ReiMinimap.instance.mcThread) {
-                calcEnvironment(var0, var1, var4);
+                calcEnvironment(x, z, env);
             } else {
-                var4.set(var0, var1, 0.5F, 1.0F, BiomeGenBase.plains);
-                queue.offer(var4);
+                env.set(x, z, 0.5F, 1.0F, BiomeGenBase.plains);
+                queue.offer(env);
             }
         }
 
-        return var4;
+        return env;
     }
 
-    public static Environment getEnvironment(Chunk var0, int var1, int var2, Thread var3) {
-        return getEnvironment(var0.xPosition * 16 + var1, var0.zPosition * 16 + var2, var3);
+    public static Environment getEnvironment(Chunk chunk, int x, int z, Thread thread) {
+        return getEnvironment(chunk.xPosition * 16 + x, chunk.zPosition * 16 + z, thread);
     }
 
-    private static void calcEnvironment(Environment var0) {
-        calcEnvironment(var0.x, var0.z, var0);
+    private static void calcEnvironment(Environment env) {
+        calcEnvironment(env.x, env.z, env);
     }
 
-    private static void calcEnvironment(int x, int z, Environment environment) {
-        if(!environment.valid) {
+    private static void calcEnvironment(int x, int z, Environment env) {
+        if(!env.valid) {
             worldChunkManager.func_4069_a(x, z, 1, 1);
             float temperature = (float)worldChunkManager.temperature[0];
             float humidity = (float)worldChunkManager.humidity[0];
@@ -109,8 +107,8 @@ class Environment {
             if(base == null) {
                 base = BiomeGenBase.getBiome(temperature, humidity);
             }
-            environment.set(x, z, temperature, humidity, base);
-            environment.valid = true;
+            env.set(x, z, temperature, humidity, base);
+            env.valid = true;
         }
     }
 

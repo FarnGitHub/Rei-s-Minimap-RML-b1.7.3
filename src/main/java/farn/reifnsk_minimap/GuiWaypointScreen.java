@@ -110,29 +110,29 @@ public class GuiWaypointScreen extends GuiScreen implements GuiScreenInterface {
 	protected void keyTyped(char character, int keyCode) {
 		super.keyTyped(character, keyCode);
 		switch(keyCode) {
-		case 199:
-			this.scrollbar.setValue(this.scrollbar.getMinimum());
-			break;
-		case 200:
-			this.scrollbar.unitDecrement();
-			break;
-		case 201:
-			this.scrollbar.blockDecrement();
-		case 202:
-		case 203:
-		case 204:
-		case 205:
-		case 206:
-		default:
-			break;
-		case 207:
-			this.scrollbar.setValue(this.scrollbar.getMaximum());
-			break;
-		case 208:
-			this.scrollbar.unitIncrement();
-			break;
-		case 209:
-			this.scrollbar.blockIncrement();
+			case 199:
+				this.scrollbar.setValue(this.scrollbar.getMinimum());
+				break;
+			case 200:
+				this.scrollbar.unitDecrement();
+				break;
+			case 201:
+				this.scrollbar.blockDecrement();
+			case 207:
+				this.scrollbar.setValue(this.scrollbar.getMaximum());
+				break;
+			case 208:
+				this.scrollbar.unitIncrement();
+				break;
+			case 209:
+				this.scrollbar.blockIncrement();
+			case 202:
+			case 203:
+			case 204:
+			case 205:
+			case 206:
+			default:
+				break;
 		}
 
 	}

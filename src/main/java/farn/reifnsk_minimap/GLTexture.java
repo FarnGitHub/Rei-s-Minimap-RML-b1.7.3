@@ -35,45 +35,45 @@ public class GLTexture {
 	private final boolean clamp;
 	private int textureId;
 
-	static void setPack(String string0) {
-		if(!string0.equals(pack)) {
+	static void setPack(String pack) {
+		if(!pack.equals(GLTexture.pack)) {
 
             for (GLTexture gLTexture : list) {
                 gLTexture.release();
             }
 
-			pack = string0;
+			GLTexture.pack = pack;
 		}
 	}
 
-	private GLTexture(String string1, boolean z2, boolean z3) {
-		this.fileName = string1;
-		this.blur = z2;
-		this.clamp = z3;
+	private GLTexture(String fileName, boolean blur, boolean clamp) {
+		this.fileName = fileName;
+		this.blur = blur;
+		this.clamp = clamp;
 		list.add(this);
 	}
 
 	int[] getData() {
-		BufferedImage bufferedImage1 = read(this.fileName);
-		int i2 = bufferedImage1.getWidth();
-		int i3 = bufferedImage1.getHeight();
-		int[] i4 = new int[i2 * i3];
-		bufferedImage1.getRGB(0, 0, i2, i3, i4, 0, i2);
-		return i4;
+		BufferedImage image = read(this.fileName);
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int[] data = new int[width * height];
+		image.getRGB(0, 0, width, height, data, 0, width);
+		return data;
 	}
 
 	void bind() {
 		if(this.textureId == 0) {
-			BufferedImage bufferedImage1 = read(this.fileName);
-			if(bufferedImage1 == null) {
+			BufferedImage image = read(this.fileName);
+			if(image == null) {
 				this.textureId = this == missing ? -2 : -1;
 			} else {
 				this.textureId = GL11.glGenTextures();
-				int i2 = bufferedImage1.getWidth();
-				int i3 = bufferedImage1.getHeight();
-				int[] i4 = new int[i2 * i3];
-				bufferedImage1.getRGB(0, 0, i2, i3, i4, 0, i2);
-				GLTextureBufferedImage.createTexture(i4, i2, i3, this.textureId, this.blur, this.clamp);
+				int width = image.getWidth();
+				int height = image.getHeight();
+				int[] data = new int[width * height];
+				image.getRGB(0, 0, width, height, data, 0, width);
+				GLTextureBufferedImage.createTexture(data, width, height, this.textureId, this.blur, this.clamp);
 			}
 		}
 
@@ -96,13 +96,13 @@ public class GLTexture {
 		this.textureId = 0;
 	}
 
-	private static BufferedImage read(String string0) {
-		BufferedImage bufferedImage1 = readImage(pack + string0);
-		return bufferedImage1 == null ? readImage(DEFAULT_PACK + string0) : bufferedImage1;
+	private static BufferedImage read(String path) {
+		BufferedImage bufferedImage1 = readImage(pack + path);
+		return bufferedImage1 == null ? readImage(DEFAULT_PACK + path) : bufferedImage1;
 	}
 
-	private static BufferedImage readImage(String string0) {
-		InputStream resource = ReiMinimap.instance.theMinecraft.texturePackList.selectedTexturePack.getResourceAsStream(string0);
+	private static BufferedImage readImage(String path) {
+		InputStream resource = ReiMinimap.instance.theMinecraft.texturePackList.selectedTexturePack.getResourceAsStream(path);
         if (resource != null) {
             try {
                 return ImageIO.read(resource);

@@ -298,7 +298,7 @@ public class ReiMinimap implements Runnable {
 				this.isUpdateImage = false;
 				this.texture.unregister();
 				this.theWorld = this.theMinecraft.theWorld;
-				this.theWorld.entityJoinedWorld(new WaypointEntity(this.theMinecraft));
+				this.theWorld.entityJoinedWorld(new WaypointEntity());
                 boolean multiplayer = this.thePlayer instanceof EntityClientPlayerMP;
 				if(this.theWorld != null) {
 					this.worldHeight = 128;
@@ -846,16 +846,16 @@ public class ReiMinimap implements Runnable {
 					westChunk = this.getChunk(mainChunk.worldObj, mainChunk.xPosition + 1, mainChunk.zPosition);
 				}
 
-				for(int chY = 0; chY < 16; ++chY) {
-					int y = cZ + chY;
+				for(int yDraw = 0; yDraw < 16; ++yDraw) {
+					int y = cZ + yDraw;
 					if(y >= 0) {
 						if(y >= 256) {
 							break;
 						}
 
 						if(this.undulate) {
-							chunker3 = chY == 0 ? northChunk : mainChunk;
-							chunker4 = chY == 15 ? southChunk : mainChunk;
+							chunker3 = yDraw == 0 ? northChunk : mainChunk;
+							chunker4 = yDraw == 15 ? southChunk : mainChunk;
 						}
 
 						for(int chX = 0; chX < 16; ++chX) {
@@ -866,9 +866,9 @@ public class ReiMinimap implements Runnable {
 								}
 
 								pixelColor6.clear();
-								int i19 = !this.omitHeightCalc && !this.heightmap && !this.undulate ? this.worldHeight : Math.min(this.worldHeight, mainChunk.getHeightValue(chX, chY));
+								int i19 = !this.omitHeightCalc && !this.heightmap && !this.undulate ? this.worldHeight : Math.min(this.worldHeight, mainChunk.getHeightValue(chX, yDraw));
 								int i20 = this.omitHeightCalc ? i19 : this.worldHeight;
-								this.surfaceCalc(mainChunk, chX, i20, chY, pixelColor6, null, thread);
+								this.surfaceCalc(mainChunk, chX, i20, yDraw, pixelColor6, null, thread);
 								float f21;
 								if(this.heightmap) {
 									f21 = this.undulate ? 0.15F : 0.6F;
@@ -890,10 +890,10 @@ public class ReiMinimap implements Runnable {
 								if(this.undulate) {
 									chunker1 = chX == 0 ? eastChunk : mainChunk;
 									chunker2 = chX == 15 ? westChunk : mainChunk;
-									int i26 = chunker1.getHeightValue(chX - 1 & 15, chY);
-									int i23 = chunker2.getHeightValue(chX + 1 & 15, chY);
-									int i29 = chunker3 == null ? 0 :chunker3.getHeightValue(chX, chY - 1 & 15);
-									int i25 = chunker4 == null ? 0 : chunker4.getHeightValue(chX, chY + 1 & 15);
+									int i26 = chunker1.getHeightValue(chX - 1 & 15, yDraw);
+									int i23 = chunker2.getHeightValue(chX + 1 & 15, yDraw);
+									int i29 = chunker3 == null ? 0 :chunker3.getHeightValue(chX, yDraw - 1 & 15);
+									int i25 = chunker4 == null ? 0 : chunker4.getHeightValue(chX, yDraw + 1 & 15);
 									f21 += Math.max(-4.0F, Math.min(3.0F, (float)(i26 - i23) * this.sin + (float)(i29 - i25) * this.cos)) * 0.14142136F * 0.8F;
 								}
 
@@ -903,7 +903,7 @@ public class ReiMinimap implements Runnable {
 									pixelColor6.blue = (float)((double)pixelColor6.blue * 0.5D);
 								}
 
-								if(this.showChunkGrid && (chX == 0 || chY == 0)) {
+								if(this.showChunkGrid && (chX == 0 || yDraw == 0)) {
 									pixelColor6.red = (float)((double)pixelColor6.red * 0.7D);
 									pixelColor6.green = (float)((double)pixelColor6.green * 0.7D);
 									pixelColor6.blue = (float)((double)pixelColor6.blue * 0.7D);
@@ -959,25 +959,25 @@ public class ReiMinimap implements Runnable {
 				int cX = 128 + chunk1.xPosition * 16 - this.posX;
 				int cZ = 128 + chunk1.zPosition * 16 - this.posZ;
 
-				for(int chX = 0; chX < 16; ++chX) {
-					int x = chX + cZ;
-					if(x >= 0) {
-						if(x >= 256) {
+				for(int chZ = 0; chZ < 16; ++chZ) {
+					int z = chZ + cZ;
+					if(z >= 0) {
+						if(z >= 256) {
 							break;
 						}
 
-						for(int chZ = 0; chZ < 16; ++chZ) {
-							int z = chZ + cX;
-							if(z >= 0) {
-								if(z >= 256) {
+						for(int chX = 0; chX < 16; ++chX) {
+							int x = chX + cX;
+							if(x >= 0) {
+								if(x >= 256) {
 									break;
 								}
 
-								int envColor = Environment.getEnvironment(chunk1, chZ, chX, thread2).getBiomeColor();
+								int envColor = Environment.getEnvironment(chunk1, chX, chZ, thread2).getBiomeColor();
 								byte r = (byte)(envColor >> 16);
 								byte g = (byte)(envColor >> 8);
 								byte b = (byte)(envColor);
-								this.texture.setRGB(z, x, r, g, b);
+								this.texture.setRGB(x, z, r, g, b);
 							}
 						}
 					}

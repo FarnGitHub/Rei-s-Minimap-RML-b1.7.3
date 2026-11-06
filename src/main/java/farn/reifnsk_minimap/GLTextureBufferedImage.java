@@ -176,8 +176,8 @@ public class GLTextureBufferedImage extends BufferedImage {
 		this.data[index] = -1;
 	}
 
-	public void setRGB(int x, int z, int rgba) {
-		int index = (z * this.getWidth() + x) * 4;
+	public void setRGB(int x, int y, int rgba) {
+		int index = (y * this.getWidth() + x) * 4;
 		this.data[index++] = (byte)(rgba >> 16);
 		this.data[index++] = (byte)(rgba >> 8);
 		this.data[index++] = (byte)(rgba);
