@@ -34,14 +34,9 @@ public class mod_ReiMinimapBetaEvo extends BaseMod {
     }
 
     private void fixBetaEvoShittyClassLoading() {
-        boolean shouldFixJar = false;
         try {
             Class.forName("farn.reifnsk_minimap.ReiMinimap", false, this.getClass().getClassLoader());
         } catch (ClassNotFoundException ignored) {
-            shouldFixJar = true;
-        }
-
-        if (shouldFixJar) {
             System.out.println("[Rei's Minimap] can't load farn.reifnsk_minimap.ReiMinimap class, try adding jar to classpath...");
             try {
                 URL classResource = this.getClass().getResource("/" + this.getClass().getName().replace('.', '/') + ".class");
