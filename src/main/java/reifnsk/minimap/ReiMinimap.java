@@ -830,13 +830,13 @@ public class ReiMinimap implements Runnable {
 		this.isCompleteImage = this.isUpdateImage && this.stripCounter.count() >= this.stripCountMax2;
 	}
 
-	private void surfaceCalc(Chunk mainChunk, Thread thread2) {
+	private void surfaceCalc(Chunk mainChunk, Thread thread) {
 		if(!this.delayFlag) {
 			if(mainChunk != null && !(mainChunk instanceof EmptyChunk)) {
 				int cX = 128 + mainChunk.xPosition * 16 - this.posX;
 				int cZ = 128 + mainChunk.zPosition * 16 - this.posZ;
-				boolean z5 = this.showSlimeChunk && this.currentDimension == 0 && this.chunkCache.isSlimeSpawn(mainChunk.xPosition, mainChunk.zPosition);
-				PixelColor pixelColor6 = new PixelColor(this.transparency);
+				boolean slimeChunk = this.showSlimeChunk && this.currentDimension == 0 && this.chunkCache.isSlimeSpawn(mainChunk.xPosition, mainChunk.zPosition);
+				PixelColor color = new PixelColor(this.transparency);
 				Chunk eastChunk = null;
 				Chunk westChunk = null;
 				Chunk northChunk = null;
@@ -854,11 +854,7 @@ public class ReiMinimap implements Runnable {
 
 				for(int chY = 0; chY < 16; ++chY) {
 					int y = cZ + chY;
-					if(y >= 0) {
-						if(y > 256) {
-							break;
-						}
-
+					if(y >= 0 && y < 256) {
 						if(this.undulate) {
 							chunker3 = chY == 0 ? northChunk : mainChunk;
 							chunker4 = chY == 15 ? southChunk : mainChunk;
@@ -866,29 +862,26 @@ public class ReiMinimap implements Runnable {
 
 						for(int chX = 0; chX < 16; ++chX) {
 							int x = cX + chX;
-							if(x >= 0) {
-								if(x >= 256) {
-									break;
-								}
+							if(x >= 0 && x < 256) {
 
-								pixelColor6.clear();
+								color.clear();
 								int i19 = !this.omitHeightCalc && !this.heightmap && !this.undulate ? this.worldHeight : Math.min(this.worldHeight, mainChunk.getHeightValue(chX, chY));
 								int i20 = this.omitHeightCalc ? i19 : this.worldHeight;
-								this.surfaceCalc(mainChunk, chX, i20, chY, pixelColor6, null, thread2);
+								this.surfaceCalc(mainChunk, chX, i20, chY, color, null, thread);
 								float f21;
 								if(this.heightmap) {
 									f21 = this.undulate ? 0.15F : 0.6F;
 									double d22 = (double)i19 - this.posYd;
 									float f24 = (float)Math.log10(Math.abs(d22) * 0.125D + 1.0D) * f21;
 									if(d22 >= 0.0D) {
-										pixelColor6.red += f24 * (1.0F - pixelColor6.red);
-										pixelColor6.green += f24 * (1.0F - pixelColor6.green);
-										pixelColor6.blue += f24 * (1.0F - pixelColor6.blue);
+										color.red += f24 * (1.0F - color.red);
+										color.green += f24 * (1.0F - color.green);
+										color.blue += f24 * (1.0F - color.blue);
 									} else {
 										f24 = Math.abs(f24);
-										pixelColor6.red -= f24 * pixelColor6.red;
-										pixelColor6.green -= f24 * pixelColor6.green;
-										pixelColor6.blue -= f24 * pixelColor6.blue;
+										color.red -= f24 * color.red;
+										color.green -= f24 * color.green;
+										color.blue -= f24 * color.blue;
 									}
 								}
 
@@ -903,23 +896,23 @@ public class ReiMinimap implements Runnable {
 									f21 += Math.max(-4.0F, Math.min(3.0F, (float)(i26 - i23) * this.sin + (float)(i29 - i25) * this.cos)) * 0.14142136F * 0.8F;
 								}
 
-								if(z5) {
-									pixelColor6.red = (float)((double)pixelColor6.red * 1.2D);
-									pixelColor6.green = (float)((double)pixelColor6.green * 0.5D);
-									pixelColor6.blue = (float)((double)pixelColor6.blue * 0.5D);
+								if(slimeChunk) {
+									color.red = (float)((double)color.red * 1.2D);
+									color.green = (float)((double)color.green * 0.5D);
+									color.blue = (float)((double)color.blue * 0.5D);
 								}
 
 								if(this.showChunkGrid && (chX == 0 || chY == 0)) {
-									pixelColor6.red = (float)((double)pixelColor6.red * 0.7D);
-									pixelColor6.green = (float)((double)pixelColor6.green * 0.7D);
-									pixelColor6.blue = (float)((double)pixelColor6.blue * 0.7D);
+									color.red = (float)((double)color.red * 0.7D);
+									color.green = (float)((double)color.green * 0.7D);
+									color.blue = (float)((double)color.blue * 0.7D);
 								}
 
-								byte b27 = ftob(pixelColor6.red * f21);
-								byte b28 = ftob(pixelColor6.green * f21);
-								byte b30 = ftob(pixelColor6.blue * f21);
+								byte b27 = ftob(color.red * f21);
+								byte b28 = ftob(color.green * f21);
+								byte b30 = ftob(color.blue * f21);
 								if(this.transparency) {
-									this.texture.setRGBA(x, y, b27, b28, b30, ftob(pixelColor6.alpha));
+									this.texture.setRGBA(x, y, b27, b28, b30, ftob(color.alpha));
 								} else {
 									this.texture.setRGB(x, y, b27, b28, b30);
 								}
