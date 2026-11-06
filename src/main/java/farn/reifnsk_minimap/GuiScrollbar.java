@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.Tessellator;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjglx.opengl.GL11;
 
 public class GuiScrollbar extends GuiButton {
 	public static final int VERTICAL = 0;
