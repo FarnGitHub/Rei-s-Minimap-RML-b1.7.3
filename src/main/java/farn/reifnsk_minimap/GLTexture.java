@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjglx.opengl.GL11;
 
 public class GLTexture {
 	private static final String DEFAULT_PACK = "/farn/reifnsk_minimap/reitextures/";
