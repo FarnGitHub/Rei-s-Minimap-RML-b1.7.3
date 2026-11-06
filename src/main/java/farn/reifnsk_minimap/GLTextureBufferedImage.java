@@ -160,16 +160,16 @@ public class GLTextureBufferedImage extends BufferedImage {
 		return this.clampTexture;
 	}
 
-	public void setRGBA(int x, int z, byte r, byte g, byte b, byte a) {
-		int index = (z * this.getWidth() + x) * 4;
+	public void setRGBA(int x, int y, byte r, byte g, byte b, byte a) {
+		int index = (y * this.getWidth() + x) * 4;
 		this.data[index++] = r;
 		this.data[index++] = g;
 		this.data[index++] = b;
 		this.data[index] = a;
 	}
 
-	public void setRGB(int x, int z, byte r, byte g, byte b) {
-		int index = (z * this.getWidth() + x) * 4;
+	public void setRGB(int x, int y, byte r, byte g, byte b) {
+		int index = (y * this.getWidth() + x) * 4;
 		this.data[index++] = r;
 		this.data[index++] = g;
 		this.data[index++] = b;

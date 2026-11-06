@@ -824,7 +824,7 @@ public class ReiMinimap implements Runnable {
 		this.isCompleteImage = this.isUpdateImage && this.stripCounter.count() >= this.stripCountMax2;
 	}
 
-	private void surfaceCalc(Chunk mainChunk, Thread thread2) {
+	private void surfaceCalc(Chunk mainChunk, Thread thread) {
 		if(!this.delayFlag) {
 			if(mainChunk != null && !(mainChunk instanceof EmptyChunk)) {
 				int cX = 128 + mainChunk.xPosition * 16 - this.posX;
@@ -848,11 +848,7 @@ public class ReiMinimap implements Runnable {
 
 				for(int chY = 0; chY < 16; ++chY) {
 					int y = cZ + chY;
-					if(y >= 0) {
-						if(y > 256) {
-							break;
-						}
-
+					if(y >= 0 && y < 256) {
 						if(this.undulate) {
 							chunker3 = chY == 0 ? northChunk : mainChunk;
 							chunker4 = chY == 15 ? southChunk : mainChunk;
@@ -860,15 +856,11 @@ public class ReiMinimap implements Runnable {
 
 						for(int chX = 0; chX < 16; ++chX) {
 							int x = cX + chX;
-							if(x >= 0) {
-								if(x >= 256) {
-									break;
-								}
-
+							if(x >= 0 && x < 256) {
 								pixelColor6.clear();
 								int i19 = !this.omitHeightCalc && !this.heightmap && !this.undulate ? this.worldHeight : Math.min(this.worldHeight, mainChunk.getHeightValue(chX, chY));
 								int i20 = this.omitHeightCalc ? i19 : this.worldHeight;
-								this.surfaceCalc(mainChunk, chX, i20, chY, pixelColor6, null, thread2);
+								this.surfaceCalc(mainChunk, chX, i20, chY, pixelColor6, null, thread);
 								float f21;
 								if(this.heightmap) {
 									f21 = this.undulate ? 0.15F : 0.6F;
@@ -911,11 +903,11 @@ public class ReiMinimap implements Runnable {
 
 								byte r = ftob(pixelColor6.red * f21);
 								byte g = ftob(pixelColor6.green * f21);
-								byte b30 = ftob(pixelColor6.blue * f21);
+								byte b = ftob(pixelColor6.blue * f21);
 								if(this.transparency) {
-									this.texture.setRGBA(x, y, r, g, b30, ftob(pixelColor6.alpha));
+									this.texture.setRGBA(x, y, r, g, b, ftob(pixelColor6.alpha));
 								} else {
-									this.texture.setRGB(x, y, r, g, b30);
+									this.texture.setRGB(x, y, r, g, b);
 								}
 							}
 						}
