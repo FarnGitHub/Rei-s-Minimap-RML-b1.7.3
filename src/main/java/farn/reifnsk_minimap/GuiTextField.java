@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjglx.input.Keyboard;
 
 public class GuiTextField extends GuiButton {
 	private static GuiTextField active;
